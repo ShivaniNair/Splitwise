@@ -2,7 +2,13 @@ const { v4: uuidv4 } = require('uuid');
 const pool = require('../config/db');
 
 exports.getForUser = async (userId) => {
-  const [rows] = await pool.query('SELECT * FROM Balances WHERE userId = ?', [userId]);
+  const [rows] = await pool.query(
+    `SELECT b.*, u.name AS owedToName, u.email AS owedToEmail
+     FROM Balances b
+     LEFT JOIN Users u ON b.owedTo = u.id
+     WHERE b.userId = ?`,
+    [userId]
+  );
   return rows;
 };
 

@@ -19,6 +19,7 @@ exports.update = async (id, { name, email, currency }) => {
   if (!fields.length) throw Object.assign(new Error('Nothing to update'), { status: 400 });
 
   values.push(id);
+ // console.log(id);
   await pool.query(`UPDATE Users SET ${fields.join(', ')} WHERE id = ?`, values);
   return exports.getById(id);
 };
