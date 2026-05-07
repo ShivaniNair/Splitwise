@@ -69,7 +69,11 @@ exports.getAll = async (userId) => {
 };
 
 exports.getById = async (id) => {
+  console.log(id)
+
   const [expenses] = await pool.query('SELECT * FROM Expenses WHERE id = ?', [id]);
+  console.log(id.length);
+
   if (!expenses.length) throw Object.assign(new Error('Expense not found'), { status: 404 });
 
   const [participants] = await pool.query(
