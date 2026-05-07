@@ -13,3 +13,10 @@ exports.updateProfile = async (req, res, next) => {
     res.json(user);
   } catch (err) { next(err); }
 };
+
+exports.deleteAccount = async (req, res, next) => {
+  try {
+    await userService.remove(req.user.id);
+    res.status(204).send();
+  } catch (err) { next(err); }
+};

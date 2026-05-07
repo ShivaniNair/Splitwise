@@ -3,15 +3,18 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const pool = require('../config/db');
 
-exports.register = async ({ name, email, password }) => {
+exports.register = async ({ name, email, password, currency = 'USD' }) => {
   const [rows] = await pool.query('SELECT id FROM Users WHERE email = ?', [email]);
   if (rows.length) throw Object.assign(new Error('Email already in use'), { status: 409 });
 
   const id = uuidv4();
   const hashed = await bcrypt.hash(password, 10);
-  await pool.query('INSERT INTO Users (id, name, email, password) VALUES (?, ?, ?, ?)', [id, name, email, hashed]);
+  await pool.query(
+    'INSERT INTO Users (id, name, email, password, currency) VALUES (?, ?, ?, ?, ?)',
+    [id, name, email, hashed, currency]
+  );
 
-  return { id, name, email };
+  return { id, name, email, currency };
 };
 
 exports.login = async ({ email, password }) => {

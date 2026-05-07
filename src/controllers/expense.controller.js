@@ -21,9 +21,24 @@ exports.getOne = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+exports.update = async (req, res, next) => {
+  try {
+    const expense = await expenseService.update(req.params.id, req.user.id, req.body);
+    res.json(expense);
+  } catch (err) { next(err); }
+};
+
 exports.remove = async (req, res, next) => {
   try {
     await expenseService.remove(req.params.id, req.user.id);
     res.status(204).send();
+  } catch (err) { next(err); }
+};
+
+exports.getActivityLog = async (req, res, next) => {
+  try {
+    const { from, to } = req.query;
+    const log = await expenseService.getActivityLog(req.user.id, { from, to });
+    res.json(log);
   } catch (err) { next(err); }
 };
